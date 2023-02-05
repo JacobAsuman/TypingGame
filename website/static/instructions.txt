@@ -1,0 +1,2 @@
+this static folder is for the static stuff - javascript, css, etc. you then link them in the necessary files like a html file. Instructions for this further are on the python website tutorial, 29 minutes in.
+An example is src="{{ url_for('static', filename='index.js') }}"
