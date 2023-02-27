@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% block title %}Race{% endblock %}
+{% block content %} 
+<body class="bg-dark text-white">
+    <header class="bg-secondary text-center p-3 mb-5">
+        <h1>Ready to Race?</h1>
+    </header>
+
+    <div class="container text-center">
+
+        <!-- Word & Input -->
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <p class="lead">Type the following as quickly as possible!</p>
+                <h2 class="display-2 mb-5" id="chosen-phrase"></h2>
+                <input type="text" class="form-control form-control-lg" placeholder="Type here..." id="word-input" autofocus>
+                <h4 class="mt-3" id="message"></h4>
+
+                <!--Words per minute columns-->
+                <div class="row mt-5">
+                    <div class="col-md-6">
+                        <h3>Words per minute:
+                            <span id="wpm">0</span>
+                        </h3>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Accuracy:
+                            <span id="accuracy">100%</span>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
