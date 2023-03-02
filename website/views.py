@@ -7,6 +7,7 @@ views = Blueprint('views', __name__)
 def home():
     return render_template("home.html")
 
-@views.route('/play')
-def play():
+@views.route('/game')
+def game():
     return render_template("game.html")
+

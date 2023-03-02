@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% block title %}Race{% endblock %}
 {% block content %} 
+
 <body class="bg-dark text-white">
     <header class="bg-secondary text-center p-3 mb-5">
         <h1>Ready to Race?</h1>
@@ -10,8 +11,11 @@
         <!-- Word & Input -->
         <div class="row">
             <div class="col-md-6 mx-auto">
-                <p class="lead">Type the following as quickly as possible!</p>
-                <h2 class="display-2 mb-5" id="chosen-phrase"></h2>
+                <p class="lead" id="count-down">Type the following as quickly as possible! Starting in 
+                    <span class="text-success" id="seconds">5</span>
+                    seconds...
+                </p>
+                <h2 class="display-4 mb-5" id="chosen-phrase"></h2>
                 <input type="text" class="form-control form-control-lg" placeholder="Type here..." id="word-input" autofocus>
                 <h4 class="mt-3" id="message"></h4>
 
@@ -31,5 +35,7 @@
             </div>
         </div>
     </div>
+
 </body>
+<script src="{{url_for('static', filename='game.js')}}"></script>
 {% endblock %}
