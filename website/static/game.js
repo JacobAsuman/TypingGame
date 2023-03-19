@@ -52,9 +52,12 @@ function letterMatch(){
     if(isMatching()){
         console.log("Match");
     }
-    if(text.length === prompt.length){
-        message.innerHTML = 'Finished!';    
+    if(isCompleted()){
+        wordInput.readOnly = true;
+        message.innerHTML = 'Finished!';
+        console.log("Finished");
     }
+    
 }
 
 function isMatching(){ 
@@ -63,6 +66,8 @@ function isMatching(){
     console.log(prompt[text.length-1]);
     console.log(text[text.length-1]);
     console.log(chosenPhrase.innerHTML);
+    console.log(text.length);
+    console.log(prompt.length);
     if(prompt[text.length-1] === text[text.length-1]){  //Compare what's typed to what needs to be typed
         message.innerHTML = 'Correct!';
         wordInput.style.borderWidth='thick';
@@ -76,7 +81,13 @@ function isMatching(){
         wordInput.style.borderColor='red';
         return false;
     }
-    
+}
+function isCompleted(){
+    var text = document.getElementById('word-input').value; // Letters being typed
+    var prompt = chosenPhrase.innerHTML;    // Letters needed to be typed
+    if(text.length === prompt.length){
+        return true;
+    }
 }
 
 // Countdown to start
