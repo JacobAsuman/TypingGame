@@ -131,7 +131,7 @@ function calcAccuracy(){
     var text = document.getElementById('word-input').value; // Letters being typed
     accuracy = ((text.length-mistakes)/text.length)*100;
     accuracy = accuracy.toFixed(2);
-    accDisplay.innerHTML = accuracy;
+    accDisplay.innerHTML = Math.round(accuracy);
     //console.log(accuracy);
 }
 
@@ -139,6 +139,6 @@ function calcWPM(){
     now = Date.now();
     let elapsed = (now-start)/1000;
     wpm = (words/elapsed)*60;
-    wpmDisplay.innerHTML = wpm;
+    wpmDisplay.innerHTML = wpm.toFixed(2);
     console.log(wpm);
 }
