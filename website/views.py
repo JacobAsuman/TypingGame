@@ -11,3 +11,6 @@ def home():
 def game():
     return render_template("game.html")
 
+@views.route('/game2')
+def game2():
+    return render_template("game2.html")

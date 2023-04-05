@@ -6,8 +6,11 @@ let wpm = 0;
 let isPlaying = false;
 let cDown = 5;
 let words = 0;
+let letters = 0;
 let start;
 let now;
+let wrong = false;
+let place;
 
 //DOM elements
 const timeIndicator = document.querySelector('#count-down');
@@ -17,18 +20,29 @@ const accDisplay = document.querySelector('#accuracy');
 const wpmDisplay = document.querySelector('#wpm');
 const seconds = document.querySelector('#seconds');
 const message = document.querySelector('#message');
+const advance = document.querySelector('#next-game');
 
 
 const prompts = [
-    'The quick, brown fox jumped over the lazy dog.',
-    'The calendar loses a precious component. The remaining months gather to mourn.',
-    'A man who has to sell a loaf of bread in order to buy a slice is not free.'
+    "The calendar loses a precious component. The remaining months gather to mourn.",
+    "A man who has to sell a loaf of bread in order to buy a slice is not free.",
+    "Those who stand at the top determine what's wrong and what's right! This very place is neutral ground! Justice will prevail, you say? But of course it will! Whoever wins this war becomes justice!",
+    "We are eternal, the pinnacle of evolution, and existence. Before us you are nothing. Your extinction is inevitable. We are the end of everything.",
+    "It seems to me that the natural world is the greatest source of excitement; the greatest source of visual beauty; the greatest source of intellectual interest. It is the greatest source of so much in life that makes life worth living."
+
 ];
+const promptlabels = [
+    "- Hunter X Hunter 2011 (Anime), Author: Yoshihiro Togashi, Studio: Madhouse",
+    "- Unknown",
+    "- One Piece (Manga), Author: Eichiiro Oda",
+    "- Mass Effect (Videogame)",
+    "- Sir David Attenborough"
+]
 
 //Initialise game
 function init(){
     //load first word from first array
-    
+    //advance.style.visibility='hidden';
     setInterval(countdown, 1000);
 
     setTimeout(function(){
@@ -62,6 +76,8 @@ function letterMatch(){
         wordInput.readOnly = true;
         message.innerHTML = 'Finished!';
         console.log("Finished");
+        advance.style.visibility='visible';
+
     }
 
     calcAccuracy();
@@ -72,34 +88,45 @@ function letterMatch(){
 function isMatching(){ 
     var text = document.getElementById('word-input').value; // Letters being typed
     var prompt = chosenPhrase.innerHTML;    // Letters needed to be typed
-    //console.log(prompt[text.length-1]);
-    //console.log(text[text.length-1]);
-    //console.log(chosenPhrase.innerHTML);
-    //console.log(text.length);
-    //console.log(prompt.length);
-    if(prompt[text.length-1] === text[text.length-1]){  //Compare what's typed to what needs to be typed
-        message.innerHTML = 'Correct!';
+    if(!wrong){
+        if(prompt[letters] === text[text.length-1]){  //Compare what's typed to what needs to be typed
+            wordInput.style.borderWidth='thick';
+            wordInput.style.borderColor='green';
+            wordInput.style.backgroundColor='white';
+            letters +=1;
+            if(text[text.length-1] === " "){
+                words +=1;
+                console.log(words);
+                wordInput.value = "";
+            }
+            //chosenPhrase.style.backgroundColor='green';
+            //chosenPhrase.innerHTML = chosenPhrase.textContent.replace(prompt[text.length-1], match =>`<mark>${match[text.length-1]}</mark>`);
+            //chosenPhrase.innerHTML = chosenPhrase.textContent.replace(chosenPhrase.innerHTML,"<span style='background-color: #FFFF00'>" + prompt.substring(0, text.length-1) + "</span>" + prompt.substring(text.length, prompt.length));
+            return true;
+        }else{
+            message.innerHTML = '';
+            wordInput.style.borderColor='red';
+            wordInput.style.backgroundColor='pink';
+            mistakes += 1;
+            place=text.length-1;
+            wrong = true;
+            return false;
+        }
+    }else if(prompt[letters] === text[place]){
         wordInput.style.borderWidth='thick';
         wordInput.style.borderColor='green';
-        if(text[text.length-1] === " "){
-            words +=1;
-            console.log(words);
-        }
-        //chosenPhrase.style.backgroundColor='green';
-        //chosenPhrase.innerHTML = chosenPhrase.textContent.replace(prompt[text.length-1], match =>`<mark>${match[text.length-1]}</mark>`);
-        //chosenPhrase.innerHTML = chosenPhrase.textContent.replace(chosenPhrase.innerHTML,"<span style='background-color: #FFFF00'>" + prompt.substring(0, text.length-1) + "</span>" + prompt.substring(text.length, prompt.length));
+        wordInput.style.backgroundColor='white';
+        letters+=1;
+        wrong = false;
         return true;
     }else{
-        message.innerHTML = '';
-        wordInput.style.borderColor='red';
-        mistakes += 1;
         return false;
     }
 }
 function isCompleted(){
     var text = document.getElementById('word-input').value; // Letters being typed
     var prompt = chosenPhrase.innerHTML;    // Letters needed to be typed
-    if(text.length === prompt.length){
+    if(letters === prompt.length){
         return true;
     }
 }
@@ -108,7 +135,6 @@ function isCompleted(){
 function countdown(){
     // Wait for time to run out
         if(cDown > 0){
-            console.log('casliifason')
             cDown--;
             
             
@@ -128,8 +154,7 @@ function checkPlaying(){
 }
 
 function calcAccuracy(){
-    var text = document.getElementById('word-input').value; // Letters being typed
-    accuracy = ((text.length-mistakes)/text.length)*100;
+    accuracy = ((letters-mistakes)/letters)*100;
     accuracy = accuracy.toFixed(2);
     accDisplay.innerHTML = Math.round(accuracy);
     //console.log(accuracy);
@@ -140,5 +165,5 @@ function calcWPM(){
     let elapsed = (now-start)/1000;
     wpm = (words/elapsed)*60;
     wpmDisplay.innerHTML = wpm.toFixed(2);
-    console.log(wpm);
+    //console.log(wpm);
 }
