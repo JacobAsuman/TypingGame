@@ -11,6 +11,7 @@ let start;
 let now;
 let wrong = false;
 let place;
+let combinations = [];
 
 //DOM elements
 const timeIndicator = document.querySelector('#count-down');
@@ -108,7 +109,11 @@ function isMatching(){
             wordInput.style.borderColor='red';
             wordInput.style.backgroundColor='pink';
             mistakes += 1;
-            place=text.length-1;
+            place=text.length-1;    //saves place of the letter that is incorrect
+            //combinations.push(prompt.substring(prompt[letters-1],prompt[letters]));
+            let test = prompt.substring((letters-1),(letters+1));
+            console.log(test);
+            //console.log(combinations[mistakes-1]);
             wrong = true;
             return false;
         }
@@ -124,7 +129,6 @@ function isMatching(){
     }
 }
 function isCompleted(){
-    var text = document.getElementById('word-input').value; // Letters being typed
     var prompt = chosenPhrase.innerHTML;    // Letters needed to be typed
     if(letters === prompt.length){
         return true;
