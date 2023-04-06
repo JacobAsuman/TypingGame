@@ -32,8 +32,12 @@
                         </h3>
                     </div>
                 </div>
-                <div class="row mt-5">
-                    <p style="visibility: hidden" id="next-game">Want to practice your mistakes? Click <a href="/game2">here</a>!</p>
+                <div style="visibility: hidden" id="next-game" class="row mt-5">
+                    <p>Want to practice your mistakes? Click <a href="#" id="start-over">here</a>!</p>
+                    <form action="/run_script" method="POST">
+                        <input type="text" name="param_name">
+                        <button type="submit">Run Script</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -41,4 +45,5 @@
 
 </body>
 <script src="{{url_for('static', filename='game.js')}}"></script>
+
 {% endblock %}

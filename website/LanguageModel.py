@@ -38,5 +38,8 @@ def createSentence(start, combo):
 
 test3 = 'Happy birthday to'
 
-generated_sent = createSentence(test3, 'ou')
-print(generated_sent)
+#generated_sent = createSentence(test3, 'ou')
+#print(generated_sent)
+
+def my_value():
+  return "Hello, world!"

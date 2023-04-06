@@ -22,6 +22,7 @@ const wpmDisplay = document.querySelector('#wpm');
 const seconds = document.querySelector('#seconds');
 const message = document.querySelector('#message');
 const advance = document.querySelector('#next-game');
+const textToReset = document.querySelector('#start-over');
 
 
 const prompts = [
@@ -40,16 +41,16 @@ const promptlabels = [
     "- Sir David Attenborough"
 ]
 
+
 //Initialise game
 function init(){
     //load first word from first array
     //advance.style.visibility='hidden';
     setInterval(countdown, 1000);
-
     setTimeout(function(){
         showPrompt(prompts);
     }, 5000);
-    
+    getData();
 }
 
 // Choose random prompt
@@ -61,12 +62,9 @@ function showPrompt(prompts){
     let wordArr = prompts[randIndex].split(" ");
     wordInput.readOnly = false;
     start = Date.now();
-    //console.log("working so far...");
-    //console.log(wordArr);
-    //console.log("TESTing" + toType.substring(0, 1));
     isPlaying = true;
     wordInput.addEventListener('input', letterMatch);
-    //accDisplay.addEventListener('input', calcAccuracy)
+
 }
 
 function letterMatch(){
@@ -78,7 +76,7 @@ function letterMatch(){
         message.innerHTML = 'Finished!';
         console.log("Finished");
         advance.style.visibility='visible';
-
+        textToReset.addEventListener('click', resetText())
     }
 
     calcAccuracy();
@@ -100,9 +98,7 @@ function isMatching(){
                 console.log(words);
                 wordInput.value = "";
             }
-            //chosenPhrase.style.backgroundColor='green';
-            //chosenPhrase.innerHTML = chosenPhrase.textContent.replace(prompt[text.length-1], match =>`<mark>${match[text.length-1]}</mark>`);
-            //chosenPhrase.innerHTML = chosenPhrase.textContent.replace(chosenPhrase.innerHTML,"<span style='background-color: #FFFF00'>" + prompt.substring(0, text.length-1) + "</span>" + prompt.substring(text.length, prompt.length));
+            
             return true;
         }else{
             message.innerHTML = '';
@@ -135,7 +131,6 @@ function isCompleted(){
     }
 }
 
-// Countdown to start
 function countdown(){
     // Wait for time to run out
         if(cDown > 0){
@@ -151,12 +146,6 @@ function countdown(){
     seconds.innerHTML = cDown;
 }
 
-function checkPlaying(){
-    if(!isPlaying){
-        message.innerHTML = 'Game Over.';
-    }
-}
-
 function calcAccuracy(){
     accuracy = ((letters-mistakes)/letters)*100;
     accuracy = accuracy.toFixed(2);
@@ -170,4 +159,8 @@ function calcWPM(){
     wpm = (words/elapsed)*60;
     wpmDisplay.innerHTML = wpm.toFixed(2);
     //console.log(wpm);
+}
+
+function resetText(){
+
 }
