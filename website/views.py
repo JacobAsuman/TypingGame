@@ -1,8 +1,8 @@
 #store standard routes for website - where users can go
 from flask import Blueprint, render_template, request
-import subprocess
+import subprocess, json
 
-from .LanguageModel import my_value
+
 
 
 views = Blueprint('views', __name__)
@@ -15,13 +15,10 @@ def home():
 def game():
     return render_template("game.html")
 
-@views.route('/game2')
-def game2():
-    data = my_value()
-    return render_template("game2.html", data=data)
-
 @views.route('/run_script', methods=['POST'])
 def run_script():
-    param = request.form['param_name']
-    subprocess.run(['python', 'website\LanguageModel.py', param])
-    return 'Success'
+    param = request.form['combo']
+    output = subprocess.run(['python', 'website\LanguageModel.py', param], stdout=subprocess.PIPE).stdout.decode().strip()
+    print(output)
+    result = output
+    return json.dumps(result)

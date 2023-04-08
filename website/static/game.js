@@ -12,6 +12,8 @@ let now;
 let wrong = false;
 let place;
 let combinations = [];
+var combo;
+let first = true;
 
 //DOM elements
 const timeIndicator = document.querySelector('#count-down');
@@ -23,14 +25,13 @@ const seconds = document.querySelector('#seconds');
 const message = document.querySelector('#message');
 const advance = document.querySelector('#next-game');
 const textToReset = document.querySelector('#start-over');
+const generateButton = document.querySelector('#run-script-btn');
 
 
 const prompts = [
     "The calendar loses a precious component. The remaining months gather to mourn.",
-    "A man who has to sell a loaf of bread in order to buy a slice is not free.",
-    "Those who stand at the top determine what's wrong and what's right! This very place is neutral ground! Justice will prevail, you say? But of course it will! Whoever wins this war becomes justice!",
-    "We are eternal, the pinnacle of evolution, and existence. Before us you are nothing. Your extinction is inevitable. We are the end of everything.",
-    "It seems to me that the natural world is the greatest source of excitement; the greatest source of visual beauty; the greatest source of intellectual interest. It is the greatest source of so much in life that makes life worth living."
+    "A man who has to sell a loaf of bread in order to buy a slice is not free."
+    
 
 ];
 const promptlabels = [
@@ -50,16 +51,18 @@ function init(){
     setTimeout(function(){
         showPrompt(prompts);
     }, 5000);
-    getData();
+    //getData();
 }
 
 // Choose random prompt
 function showPrompt(prompts){
     // Generate random prompt index
-    const randIndex = Math.floor(Math.random() * prompts.length);
-    //Output chosen prompt
-    chosenPhrase.innerHTML = prompts[randIndex];
-    let wordArr = prompts[randIndex].split(" ");
+    if(first === true){
+        const randIndex = Math.floor(Math.random() * prompts.length);
+        //Output chosen prompt
+        chosenPhrase.innerHTML = prompts[randIndex];
+    }
+    chosenPhrase.style.visibility = 'visible';
     wordInput.readOnly = false;
     start = Date.now();
     isPlaying = true;
@@ -73,10 +76,10 @@ function letterMatch(){
     }
     if(isCompleted()){
         wordInput.readOnly = true;
+        wordInput.value="";
         message.innerHTML = 'Finished!';
         console.log("Finished");
         advance.style.visibility='visible';
-        textToReset.addEventListener('click', resetText())
     }
 
     calcAccuracy();
@@ -107,6 +110,10 @@ function isMatching(){
             mistakes += 1;
             place=text.length-1;    //saves place of the letter that is incorrect
             //combinations.push(prompt.substring(prompt[letters-1],prompt[letters]));
+            if(mistakes === 1){
+                combo = prompt.substring((letters-1),(letters+1));
+                console.log(combo);
+            }
             let test = prompt.substring((letters-1),(letters+1));
             console.log(test);
             //console.log(combinations[mistakes-1]);
@@ -162,5 +169,16 @@ function calcWPM(){
 }
 
 function resetText(){
-
+    chosenPhrase.style.visibility = 'visible';
+    console.log("Should work too");
+    accuracy= 100;
+    mistakes=0;
+    wpm = 0;
+    isPlaying = false;
+    cDown = 5;
+    words = 0;
+    letters = 0;
+    first = false;
+    timeIndicator.style.visibility = 'visible';
+    init();
 }

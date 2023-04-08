@@ -1,6 +1,9 @@
 {% extends "base.html" %} {% block title %}Race{% endblock %}
 {% block content %} 
-
+<head>
+    <script src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
 <body class="bg-dark text-white">
     <header class="bg-secondary text-center p-3 mb-5">
         <h1>Ready to Race?</h1>
@@ -15,7 +18,7 @@
                     <span class="text-success" id="seconds">5</span>
                     seconds...
                 </p>
-                <h2 class="display-6 mb-5" id="chosen-phrase"></h2>
+                <h2 style="white-space: pre-wrap"class="display-6 mb-5" id="chosen-phrase"></h2>
                 <input type="text" class="form-control form-control-lg" placeholder="Type here..." id="word-input" readonly="readonly"autofocus>
                 <h4 class="mt-3" id="message"></h4>
 
@@ -32,11 +35,9 @@
                         </h3>
                     </div>
                 </div>
-                <div style="visibility: hidden" id="next-game" class="row mt-5">
-                    <p>Want to practice your mistakes? Click <a href="#" id="start-over">here</a>!</p>
-                    <form action="/run_script" method="POST">
-                        <input type="text" name="param_name">
-                        <button type="submit">Run Script</button>
+                <div style="visibility: hidden" id="next-game" class="col md-5">
+                    <form>
+                        <button type="button" class="btn btn-primary" id="run-script-btn">Run Script</button>
                     </form>
                 </div>
             </div>
@@ -45,5 +46,41 @@
 
 </body>
 <script src="{{url_for('static', filename='game.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+    $('#run-script-btn').click(function(event) {
+        event.preventDefault(); // prevent default form submit behavior
+        var param = $('#param-input').val();
+
+        $.ajax({
+            url: '/run_script',
+            method: 'POST',
+            data: { combo: combo },
+            success: function(output) {
+                //$('#output').text(response.output);
+                console.log(output)
+                output = output.replace('"', '');
+                output = output.replace("\n", '');
+                output = output.replace('\r\n"', '');
+                $('#chosen-phrase').text(output);
+                // submit the form manually after the AJAX request completes
+                console.log(output)
+                //$('form').submit();
+                
+            },
+            error: function(xhr, status, error) {
+                alert('An error occurred: ' + error);
+            }
+        })
+        .done(function(output){
+            resetText();
+        });
+        
+    });
+});
+</script>
+
+
 
 {% endblock %}
