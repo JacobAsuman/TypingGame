@@ -26,8 +26,8 @@ param = sys.argv[1]
 param = param.lower()
 def createSentence(start, combo):
   combo = combo.replace(" ", "")
-  for i in range(30): #20 words generated
-    for n in range(3):  #3 attempts at letter combo
+  for i in range(20): #20 words generated
+    for n in range(5):  #3 attempts at letter combo
       test_in = tokenizer.encode(start, return_tensors='pt', padding=True, truncation=True)  #starts with whatever the beginning sentence is
       output = model.generate(test_in, max_length=(i+3), do_sample=True, pad_token_id=tokenizer.eos_token_id, attention_mask=test_in.ne(tokenizer.pad_token_id)) #generates one new word for this sentence
       attempt=tokenizer.decode(output[0], skip_special_tokens=True) #converts back to string sentence
@@ -39,7 +39,7 @@ def createSentence(start, combo):
         start = attempt
   return start
 
-test3 = 'Happy'
+test3 = 'The'
 """
 
 generated_sent = createSentence(test3, param)

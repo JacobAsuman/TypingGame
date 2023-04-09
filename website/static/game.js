@@ -15,7 +15,6 @@ let combinations = [];
 var combo;
 let first = true;
 
-let ctx = document.getElementById('myChart').getContext('2d');
 
 //DOM elements
 const timeIndicator = document.querySelector('#count-down');
@@ -29,6 +28,7 @@ const advance = document.querySelector('#next-game');
 const textToReset = document.querySelector('#start-over');
 const generateButton = document.querySelector('#run-script-btn');
 const waitText = document.querySelector('#wait-please');
+const charts = document.querySelector('#charts');
 
 var intervalID = null;
 
@@ -42,32 +42,77 @@ let accuracyChart = new Chart(document.getElementById('accuracyChart'), {
       datasets: [{
         label: 'Accuracy',
         data: [],
-        borderColor: 'blue',
+        borderColor: 'white',
+        fontColor: 'white',
         fill: false
       }]
     },
     options: {
       scales: {
+        xAxes: [{
+          ticks: {
+            fontColor: 'white'
+          }
+        }],
         yAxes: [{
           ticks: {
-            beginAtZero: true,
-            max: 100
+            fontColor: 'white',
+            suggestedMax: 100,
+            suggestedMin: 0
           }
         }]
+      },
+      legend: {
+        labels: {
+          fontColor: 'white'
+        }
+      }
+    }
+  });
+
+  let wpmChart = new Chart(document.getElementById('wpmChart'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Words per minute',
+        data: [],
+        borderColor: 'yellow',
+        fill: true
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+            ticks: {
+                fontColor: 'white'
+            }
+        }],
+        yAxes: [{
+          ticks: {
+            suggestedMin: 0,
+            suggestedMax: 100,
+            fontColor: 'white'
+          }
+        }]
+      },
+      legend: {
+        labels: {
+            fontColor: 'white'
+        }
       }
     }
   });
 
 const prompts = [
     "The calendar loses a precious component. The remaining months gather to mourn.",
-    "A man who has to sell a loaf of bread in order to buy a slice is not free."
-    
-
+    "A man who has to sell a loaf of bread in order to buy a slice is not free.",
+    "You exist because we allow it. And you will end because we demand it.",
+    "An understanding of the natural world is a source of not only great curiosity, but great fulfilment."
 ];
 const promptlabels = [
     "- Hunter X Hunter 2011 (Anime), Author: Yoshihiro Togashi, Studio: Madhouse",
     "- Unknown",
-    "- One Piece (Manga), Author: Eichiiro Oda",
     "- Mass Effect (Videogame)",
     "- Sir David Attenborough"
 ]
@@ -87,7 +132,6 @@ function init(){
     setTimeout(function(){
         showPrompt(prompts);
     }, 5000);
-    //getData();
 }
 
 // Choose random prompt
@@ -108,7 +152,6 @@ function showPrompt(prompts){
 
 function letterMatch(){
     if(isMatching()){
-        //console.log("Match");
     }
     if(isCompleted()){
         wordInput.readOnly = true;
@@ -116,10 +159,14 @@ function letterMatch(){
         message.innerHTML = 'Finished!';
         console.log("Finished");
         advance.style.visibility='visible';
+        generateButton.style.visibility='visible';
+        generateButton.ariaDisabled = 'false'
+        //charts.style.visibility='visible';
         advance.addEventListener('click',function(){
             console.log('CLICK');
             waitText.style.visibility = 'visible';
-            generateButton.ariaDisabled = "disabled";
+            generateButton.style.visibility = 'hidden';
+            generateButton.ariaDisabled = "true";
         })
     }
 
@@ -144,7 +191,10 @@ function isMatching(){
                 words +=1;
                 console.log(words);
                 wordInput.value = "";
+                updateCharts();
             }
+            test = prompt.substring(1);
+            console.log(test);
             return true;
         }else{
             message.innerHTML = '';
@@ -203,9 +253,7 @@ function calcAccuracy(){
     accuracy = ((letters-mistakes)/letters)*100;
     accuracy = accuracy.toFixed(2);
     accDisplay.innerHTML = Math.round(accuracy);
-    accuracyChart.data.labels.push(words);
-    accuracyChart.data.datasets[0].data.push(accuracy);
-    accuracyChart.update();
+    
     //console.log(accuracy);
 }
 
@@ -214,7 +262,6 @@ function calcWPM(){
     let elapsed = (now-start)/1000;
     wpm = (words/elapsed)*60;
     wpmDisplay.innerHTML = wpm.toFixed(2);
-    //console.log(wpm);
 }
 
 function resetText(){
@@ -222,6 +269,12 @@ function resetText(){
     chosenPhrase.style.visibility = 'hidden';
     advance.style.visibility = 'hidden';
     message.innerHTML = '';
+    accuracyChart.data.labels = [];
+    accuracyChart.data.datasets[0].data = [];
+    accuracyChart.update();
+    wpmChart.data.labels = [];
+    wpmChart.data.datasets[0].data = [];
+    wpmChart.update();
     accuracy= 100;
     mistakes=0;
     wpm = 0;
@@ -235,6 +288,12 @@ function resetText(){
     init();
 }
 
-function createChart(){
-    
+function updateCharts(){
+    console.log('updating chart');
+    accuracyChart.data.labels.push(words);
+    accuracyChart.data.datasets[0].data.push(accuracy);
+    wpmChart.data.labels.push(words);
+    wpmChart.data.datasets[0].data.push(wpm);
+    wpmChart.update();
+    accuracyChart.update();
 }
