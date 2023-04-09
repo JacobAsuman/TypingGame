@@ -18,7 +18,11 @@ def game():
 @views.route('/run_script', methods=['POST'])
 def run_script():
     param = request.form['combo']
-    output = subprocess.run(['python', 'website\LanguageModel.py', param], stdout=subprocess.PIPE).stdout.decode().strip()
+    output = subprocess.run(['python', 'website\LanguageModel.py', param], stdout=subprocess.PIPE).stdout.decode()#.strip()
+    #output = output.replace('.', '.')
+    output = output.replace('!', '! ')
+    output = output.replace('?', '? ')
     print(output)
     result = output
-    return json.dumps(result)
+    #return json.dumps(result)
+    return result

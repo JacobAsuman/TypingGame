@@ -23,10 +23,11 @@ for row in data:
 
 lines = lines[:-614]  #shrinks size to 1024
 param = sys.argv[1]
-
+param = param.lower()
 def createSentence(start, combo):
-  for i in range(20): #20 words generated
-    for n in range(5):  #6 attempts at letter combo
+  combo = combo.replace(" ", "")
+  for i in range(30): #20 words generated
+    for n in range(3):  #3 attempts at letter combo
       test_in = tokenizer.encode(start, return_tensors='pt', padding=True, truncation=True)  #starts with whatever the beginning sentence is
       output = model.generate(test_in, max_length=(i+3), do_sample=True, pad_token_id=tokenizer.eos_token_id, attention_mask=test_in.ne(tokenizer.pad_token_id)) #generates one new word for this sentence
       attempt=tokenizer.decode(output[0], skip_special_tokens=True) #converts back to string sentence
@@ -40,17 +41,6 @@ def createSentence(start, combo):
 
 test3 = 'Happy'
 """
-def clean_up(text):
-    # Replace all possible newline characters with spaces
-    cleaned_text = re.sub(r'[\n\r\f\v]', ' ', text)
-    # Replace all consecutive spaces with a single space
-    cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
-    cleaned_text = re.sub(r'[^\x20-\x7E]', '', cleaned_text)
-
-    # Strip leading/trailing spaces
-    cleaned_text = cleaned_text.strip()
-    return cleaned_text
-
 
 generated_sent = createSentence(test3, param)
 clean_text = clean_up(generated_sent)
@@ -64,8 +54,10 @@ def cleanUp(text, *to_remove):
     pattern = '|'.join(map(re.escape, to_remove))
     cleaned_text = re.sub(pattern, '', text)
     return cleaned_text
-generated_sent = createSentence(test3, 'ou')
+generated_sent = createSentence(test3, param)
 
 
-cleaned_sent = cleanUp(generated_sent.strip(), '\\', '"', '\r', '\n')
+cleaned_sent = cleanUp(generated_sent.strip(),'\n')
+
+#print(param)
 print(cleaned_sent)

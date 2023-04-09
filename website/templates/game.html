@@ -3,6 +3,7 @@
 <head>
     <script src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-dark text-white">
     <header class="bg-secondary text-center p-3 mb-5">
@@ -13,32 +14,46 @@
 
         <!-- Word & Input -->
         <div class="row">
-            <div class="col-md-7 mx-auto">
+            <div class="col-md-10 mx-auto">
                 <p class="lead" id="count-down">Type the following as quickly as possible! Starting in 
                     <span class="text-success" id="seconds">5</span>
                     seconds...
                 </p>
-                <h2 style="white-space: pre-wrap"class="display-6 mb-5" id="chosen-phrase"></h2>
+                <h3 style="white-space: pre-wrap"class="display-6 mb-5" id="chosen-phrase"></h3>
                 <input type="text" class="form-control form-control-lg" placeholder="Type here..." id="word-input" readonly="readonly"autofocus>
                 <h4 class="mt-3" id="message"></h4>
 
                 <!--Words per minute columns-->
                 <div class="row mt-5">
                     <div class="col-md-6">
-                        <h3>Words per minute:
+                        <h5>Words per minute:
                             <span id="wpm">0</span>
-                        </h3>
+                        </h5>
                     </div>
                     <div class="col-md-6">
-                        <h3>Accuracy:
+                        <h5>Accuracy:
                             <span id="accuracy">100</span>%
-                        </h3>
+                        </h5>
                     </div>
                 </div>
-                <div style="visibility: hidden" id="next-game" class="col md-5">
-                    <form>
-                        <button type="button" class="btn btn-primary" id="run-script-btn">Run Script</button>
-                    </form>
+                <br>
+                <!--Generate new sentence column-->
+                <div class="row ">
+                    <div style="visibility: hidden" id="next-game" class="col-md-10 mx-auto">
+                        <div>
+                            <p>Try improving on your mistakes!</p>
+                        </div>
+                        <form>
+                            <button type="button" class="btn btn-primary" id="run-script-btn">Generate Text</button>
+                        </form>
+    
+                    </div>
+                    <p id="wait-please"style="visibility: hidden" style="color: #FFC733"> Please wait... Your new practice text is being generated...</p>
+                </div>
+                <div class="row">
+                    <canvas id="accuracyChart">
+                        
+                    </canvas>
                 </div>
             </div>
         </div>
