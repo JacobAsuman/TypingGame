@@ -2,7 +2,7 @@ import pandas as pd
 import torch
 import tensorflow
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import sys, re, logging
+import sys, re, logging, string
 
 data = pd.read_csv('website\static\sentencedataset.csv')
 #print(data)
@@ -24,6 +24,11 @@ for row in data:
 lines = lines[:-614]  #shrinks size to 1024
 param = sys.argv[1]
 param = param.lower()
+
+translator = str.maketrans('', '', string.punctuation)
+param = param.translate(translator)
+
+
 def createSentence(start, combo):
   combo = combo.replace(" ", "")
   for i in range(20): #20 words generated
@@ -40,20 +45,12 @@ def createSentence(start, combo):
   return start
 
 test3 = 'The'
-"""
 
-generated_sent = createSentence(test3, param)
-clean_text = clean_up(generated_sent)
-#generated_sent = generated_sent.replace('"', '') # Remove quotes
-#generated_sent = generated_sent.replace('\r', ' ') # Remove \r
-#generated_sent = generated_sent.replace('\n', ' ') # Remove \n
-#generated_sent = generated_sent.replace('\r\n', '')
-clean_text = clean_text.replace('\r\n', ' ').replace('\n', ' ').replace('\r', ' ')
-"""
 def cleanUp(text, *to_remove):
     pattern = '|'.join(map(re.escape, to_remove))
     cleaned_text = re.sub(pattern, '', text)
     return cleaned_text
+
 generated_sent = createSentence(test3, param)
 
 

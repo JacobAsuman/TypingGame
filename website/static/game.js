@@ -14,6 +14,10 @@ let place;
 let combinations = [];
 var combo;
 let first = true;
+let omErrors = [];
+let subErrors = [];
+let insErrors = [];
+let orderErrors;
 
 
 //DOM elements
@@ -108,25 +112,23 @@ const prompts = [
     "The calendar loses a precious component. The remaining months gather to mourn.",
     "A man who has to sell a loaf of bread in order to buy a slice is not free.",
     "You exist because we allow it. And you will end because we demand it.",
-    "An understanding of the natural world is a source of not only great curiosity, but great fulfilment."
+    "An understanding of the natural world is a source of not only great curiosity, but great fulfilment.",
+    "So I walked back to my room and collapsed on the bottom bunk, thinking that if people were rain, I was drizzle and she was hurricane."
 ];
 const promptlabels = [
     "- Hunter X Hunter 2011 (Anime), Author: Yoshihiro Togashi, Studio: Madhouse",
     "- Unknown",
     "- Mass Effect (Videogame)",
-    "- Sir David Attenborough"
+    "- Sir David Attenborough",
+    "- Author: John Green"
 ]
 
 
 //Initialise game
 function init(){
-    //load first word from first array
-    //advance.style.visibility='hidden';
     if (intervalID) {
-        clearInterval(intervalID);
-        console.log('cleared intervalID')
+        clearInterval(intervalID);  //resets timer if new round
       }
-    console.log('init begins');
     timeIndicator.style.visibility = 'visible';
     intervalID = setInterval(countdown, 1000);
     setTimeout(function(){
@@ -187,13 +189,13 @@ function isMatching(){
             wordInput.style.borderColor='green';
             wordInput.style.backgroundColor='white';
             letters +=1;
-            if(text[text.length-1] === " "){
+            if(text[text.length-1] === " "){  //spacebar = new word
                 words +=1;
                 console.log(words);
                 wordInput.value = "";
                 updateCharts();
             }
-            test = prompt.substring(1);
+            test = prompt.substring(letters);
             console.log(test);
             return true;
         }else{
@@ -216,8 +218,11 @@ function isMatching(){
         letters+=1;
         wrong = false;
         return true;
-    }else{
+    }else if(prompt[letters-1] === text[text.length-1] || prompt[letters+1] === text[text.length-1]){  //check if current (incorrect) letter and last are switched (could call it ordering error){
+        console.log('FOUND ORDER ERROR');
         return false;
+    }else{
+      return false;
     }
 }
 function isCompleted(){
@@ -283,7 +288,6 @@ function resetText(){
     letters = 0;
     cDown = 5;
     first = false;
-    combo = '';
     timeIndicator.style.visibility = 'visible';
     init();
 }
