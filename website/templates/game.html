@@ -83,9 +83,7 @@
                 output = output.replace("\n", '');
                 output = output.replace('\r\n"', '');
                 $('#chosen-phrase').text(output);
-                // submit the form manually after the AJAX request completes
                 console.log(output)
-                //$('form').submit();
                 
             },
             error: function(xhr, status, error) {

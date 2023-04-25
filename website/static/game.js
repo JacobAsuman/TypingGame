@@ -29,13 +29,11 @@ const wpmDisplay = document.querySelector('#wpm');
 const seconds = document.querySelector('#seconds');
 const message = document.querySelector('#message');
 const advance = document.querySelector('#next-game');
-const textToReset = document.querySelector('#start-over');
 const generateButton = document.querySelector('#run-script-btn');
 const waitText = document.querySelector('#wait-please');
-const charts = document.querySelector('#charts');
+
 
 var intervalID = null;
-
 
 //Chart elements
 
@@ -108,7 +106,7 @@ let accuracyChart = new Chart(document.getElementById('accuracyChart'), {
     }
   });
 
-const prompts = [
+let prompts = [
     "The calendar loses a precious component. The remaining months gather to mourn.",
     "A man who has to sell a loaf of bread in order to buy a slice is not free.",
     "You exist because we allow it. And you will end because we demand it.",
@@ -147,29 +145,27 @@ function showPrompt(prompts){
     chosenPhrase.style.visibility = 'visible';
     wordInput.readOnly = false;
     start = Date.now();
-    isPlaying = true;
     wordInput.addEventListener('input', letterMatch);
 
 }
 
 function letterMatch(){
     if(isMatching()){
-    }
+
+    };
     if(isCompleted()){
-        wordInput.readOnly = true;
-        wordInput.value="";
-        message.innerHTML = 'Finished!';
-        console.log("Finished");
-        advance.style.visibility='visible';
-        generateButton.style.visibility='visible';
-        generateButton.ariaDisabled = 'false'
-        //charts.style.visibility='visible';
-        advance.addEventListener('click',function(){
-            console.log('CLICK');
-            waitText.style.visibility = 'visible';
-            generateButton.style.visibility = 'hidden';
-            generateButton.ariaDisabled = "true";
-        })
+      wordInput.readOnly = true;
+      wordInput.value="";
+      message.innerHTML = 'Finished!';
+      console.log("Finished");
+      advance.style.visibility='visible';
+      generateButton.style.visibility='visible';
+      generateButton.ariaDisabled = 'false'
+      advance.addEventListener('click',function(){ 
+          waitText.style.visibility = 'visible';
+          generateButton.style.visibility = 'hidden';
+          generateButton.ariaDisabled = "true";
+      })
     }
 
     calcAccuracy();
@@ -177,12 +173,9 @@ function letterMatch(){
     
 }
 
-function isMatching(){ 
-    
+function isMatching(){
     var text = document.getElementById('word-input').value; // Letters being typed
     var prompt = chosenPhrase.innerHTML;    // Letters needed to be typed
-    //console.log(text[text.length-1]);
-    //console.log(prompt[letters]);
     if(!wrong){
         if(prompt[letters] === text[text.length-1]){  //Compare what's typed to what needs to be typed
             wordInput.style.borderWidth='thick';
@@ -191,12 +184,9 @@ function isMatching(){
             letters +=1;
             if(text[text.length-1] === " "){  //spacebar = new word
                 words +=1;
-                console.log(words);
                 wordInput.value = "";
                 updateCharts();
             }
-            test = prompt.substring(letters);
-            console.log(test);
             return true;
         }else{
             message.innerHTML = '';
@@ -218,12 +208,9 @@ function isMatching(){
         letters+=1;
         wrong = false;
         return true;
-    }else if(prompt[letters-1] === text[text.length-1] || prompt[letters+1] === text[text.length-1]){  //check if current (incorrect) letter and last are switched (could call it ordering error){
-        console.log('FOUND ORDER ERROR');
+      }else{
         return false;
-    }else{
-      return false;
-    }
+      }
 }
 function isCompleted(){
     var prompt = chosenPhrase.innerHTML;    // Letters needed to be typed
@@ -232,7 +219,9 @@ function isCompleted(){
     }
     else if(first === false){
         if(letters === prompt.length-1){
-            return true;
+          console.log(prompt.length-1);
+          console.log(words);
+          return true;
         }
     }else{
         return false;
@@ -256,10 +245,7 @@ function countdown(){
 
 function calcAccuracy(){
     accuracy = ((letters-mistakes)/letters)*100;
-    accuracy = accuracy.toFixed(2);
     accDisplay.innerHTML = Math.round(accuracy);
-    
-    //console.log(accuracy);
 }
 
 function calcWPM(){
@@ -269,7 +255,7 @@ function calcWPM(){
     wpmDisplay.innerHTML = wpm.toFixed(2);
 }
 
-function resetText(){
+function resetText(){ //resets values, changes display
     waitText.style.visibility = 'hidden';
     chosenPhrase.style.visibility = 'hidden';
     advance.style.visibility = 'hidden';
@@ -293,7 +279,6 @@ function resetText(){
 }
 
 function updateCharts(){
-    console.log('updating chart');
     accuracyChart.data.labels.push(words);
     accuracyChart.data.datasets[0].data.push(accuracy);
     wpmChart.data.labels.push(words);
